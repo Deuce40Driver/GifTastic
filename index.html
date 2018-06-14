@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Movies</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Movie Gif Search</h1>
+    
+    <div id="buttons-view"></div>
+
+    <div class = "row">
+      <div class = "col-md-8">
+        <div class = "row">
+            <div id="gifs-appear-here"></div>
+          </div>
+      </div>
+
+      <div class = "col-md-4">
+        <form id="movie-form">
+          <label for="movie-input">Add Animal</label>
+            <input type="text" id="movie-input">
+              <br>      
+            <input id="add-movie" type="submit" value="Submit">
+        </form>
+      </div>
+        
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+  
+      var movies = ["The Matrix", "The Notebook", "Mr. Nobody", "The Lion King"];
+
+      function renderButtons() {
+
+        $("#movies-view").empty();
+
+        for (var i = 0; i < movies.length; i++) {
+      
+          var a = $("<button>");
+          a.addClass("movie");
+          a.attr("data-name");
+          a.text(movies[i]);
+          $("#movies-view").append(a)
+        };
+      };
+
+      $("#add-movie").on("click", function(event) {
+
+        event.preventDefault();
+
+        var movie = $("#movie-input").val().trim();
+        movies.push(movie);
+
+        renderButtons();
+      });
+
+      renderButtons();
+
+
+    var queryURL = "https://api.giphy.com/v1/gifs/trending?api_key=rsOJWm3g0qlgziHRD4A9EfLajwJhoF5A";
+  
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+
+
+
+      console.log(response);
+    });
+  </script>  
+
+
+  
+</body>
+
+</html>
