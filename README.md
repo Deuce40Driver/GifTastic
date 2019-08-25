@@ -10,8 +10,8 @@
 - Under every gif, its rating (PG, G, so on) is displayed. This data is provided by the GIPHY API.
 - There is a form which takes the value from a user input box and adds a new button to the page for that topic.
 
-Bonus Goals `Still to Add`
------------
+## Bonus Features 
+*Still to Add*
 - Make app fully mobile responsive.
 - Allow users to request additional gifs to be added to the page.
 - Each request should ADD 10 gifs to the page, NOT overwrite the existing gifs.
