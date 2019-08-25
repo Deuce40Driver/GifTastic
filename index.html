@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Favorite Movies</title>
+  <title>Spiffy-Giphy Hip-Hop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
   <style type="text/css">
     button,
     div,
@@ -11,85 +12,106 @@
     input {
       margin: 10px;
     }
+    div {
+      text-align: center;
+    }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
 </head>
 
 <body>
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Hip-Hop Gif Search</h1>
+      <p class="lead">Click on one of the Hip-Hop topics below to populate 10 related gifs, or create a new button with a topic of your choice. </p>
+      <p class="lead">Animate and freeze Gifs by clicking on them.</p>
+    </div>
+  </div>
 
   <div class="container">
-
-    <h1>Movie Gif Search</h1>
-    
-    <div id="buttons-view"></div>
-
-    <div class = "row">
-      <div class = "col-md-8">
-        <div class = "row">
-            <div id="gifs-appear-here"></div>
-          </div>
-      </div>
-
-      <div class = "col-md-4">
-        <form id="movie-form">
-          <label for="movie-input">Add Animal</label>
-            <input type="text" id="movie-input">
-              <br>      
-            <input id="add-movie" type="submit" value="Submit">
+    <div class="row">
+      <div id="buttons-view"></div>
+    </div>
+    <div class='row'>
+      <div id="gifs-appear-here" class="col-md"></div>
+      <div class="col-md">
+        <form id="hip-hop-form">
+          <label for="artist-input">Add Artist</label>
+          <input type="text" id="artist-input">
+            <br>      
+          <input id="add-artist" type="submit" value="Submit">
         </form>
       </div>
-        
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
 
-  
-      var movies = ["The Matrix", "The Notebook", "Mr. Nobody", "The Lion King"];
+    var topics = ["Eminem", "Freestyle", "Jay-Z", "Flow", "Dr.Dre", "Producer", "50 Cent", "Rakim", "Kendrick Lamar", "Drake", "Tupac", "Notorious B.I.G.", "Battle Rap", "2 Chainz", "Run The Jewels", "Lil Wayne", "Macklemore", "Wu Tang Clan", "T.I.", "Run DMC"];
 
-      function renderButtons() {
+    function renderButtons() {
+      $("#buttons-view").empty();
 
-        $("#movies-view").empty();
-
-        for (var i = 0; i < movies.length; i++) {
-      
-          var a = $("<button>");
-          a.addClass("movie");
-          a.attr("data-name");
-          a.text(movies[i]);
-          $("#movies-view").append(a)
-        };
+      for (var i = 0; i < topics.length; i++) {
+        var a = $("<button>");
+        a.attr("data-name", topics[i]);
+        a.text(topics[i]);
+        $("#buttons-view").append(a)
       };
+    };
 
-      $("#add-movie").on("click", function(event) {
 
-        event.preventDefault();
+    renderButtons();
 
-        var movie = $("#movie-input").val().trim();
-        movies.push(movie);
 
-        renderButtons();
+    $(document).on('click', 'button', function(artist) {
+      $('#gifs-appear-here').empty();
+
+      var artist = $(this).attr("data-name");
+      var apiKey = "rsOJWm3g0qlgziHRD4A9EfLajwJhoF5A";
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + artist + "&api_key=" + apiKey + "&limit=10";
+    
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response) {
+        console.log(response);
+
+        for (var j = 0; j < response.data.length; j++) {
+          var stillURL = response.data[j].images.fixed_width_still.url;
+          var animateURL = response.data[j].images.fixed_width.url;
+
+          var newGif = $('<img>');
+              newGif.addClass('gif');
+              newGif.attr({'src': stillURL, 'data-still': stillURL, 'data-animate': animateURL, 'data-state': 'still'});
+          $('#gifs-appear-here').append(newGif);
+        };
       });
+    });
+
+
+    $("#add-artist").on("click", function(event) {
+      event.preventDefault();
+
+      var newArtist = $("#artist-input").val().trim();
+      topics.push(newArtist);
 
       renderButtons();
-
-
-    var queryURL = "https://api.giphy.com/v1/gifs/trending?api_key=rsOJWm3g0qlgziHRD4A9EfLajwJhoF5A";
-  
-    $.ajax({
-      url: queryURL,
-      method: "GET"
-    }).then(function(response) {
-
-
-
-      console.log(response);
     });
+
+
+    $(document).on('click', '.gif', function() {
+      var state = $(this).attr("data-state");
+
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      };
+    });
+
   </script>  
-
-
-  
 </body>
-
 </html>
